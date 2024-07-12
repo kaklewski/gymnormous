@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import SectionWrapper from './SectionWrapper';
-import { WORKOUTS } from '../utils/swoldier';
+import { WORKOUTS, SCHEMES } from '../utils/swoldier';
 
 function Header(props) {
 	const { index, title, description } = props;
@@ -31,7 +31,6 @@ export default function Generator() {
 		<SectionWrapper
 			header={'generate your workout'}
 			title={['Its', 'Huge', "o'clock"]}>
-
 			<Header
 				index={'01'}
 				title={'Pick your poison'}
@@ -41,7 +40,15 @@ export default function Generator() {
 				{Object.keys(WORKOUTS).map((type, typeIndex) => {
 					return (
 						<button
-							className='bg-slate-950 border duration-200 px-4 hover:border-blue-600 py-3 rounded-lg'
+							onClick={() => {
+								setPoison(type);
+							}}
+							className={
+								'bg-slate-950 border  duration-200 px-4 hover:border-blue-600 py-3 rounded-lg ' +
+								(type === poison
+									? ' border-blue-600'
+									: ' border-blue-400')
+							}
 							key={typeIndex}>
 							<p className='capitalize'>
 								{type.replaceAll('_', ' ')}
@@ -73,10 +80,33 @@ export default function Generator() {
 					</svg>
 				</button>
 				{showModal && <div>modal</div>}
+			</div>
 
-
-
-				
+			<Header
+				index={'03'}
+				title={'Become Juggernaut'}
+				description={'Select your ultimate objective.'}
+			/>
+			<div className='grid grid-cols-3 gap-4'>
+				{Object.keys(SCHEMES).map((scheme, schemeIndex) => {
+					return (
+						<button
+							onClick={() => {
+								setGoals(scheme);
+							}}
+							className={
+								'bg-slate-950 border  duration-200 hover:border-blue-600 py-3 rounded-lg px-4 ' +
+								(scheme === goals
+									? ' border-blue-600'
+									: ' border-blue-400')
+							}
+							key={schemeIndex}>
+							<p className='capitalize'>
+								{scheme.replaceAll('_', ' ')}
+							</p>
+						</button>
+					);
+				})}
 			</div>
 		</SectionWrapper>
 	);
