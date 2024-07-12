@@ -24,7 +24,9 @@ export default function Hero() {
 				doors.
 			</p>
 
-			<Button text={'Accept & Begin'} />
+			<Button func={() => {
+				window.location.href = '#generate'
+			}} text={'Accept & Begin'} />
 		</div>
 	);
 }
