@@ -21,10 +21,35 @@ export default function Generator() {
 	const [showModal, setShowModal] = useState(false);
 	const [poison, setPoison] = useState('individual');
 	const [muscles, setMuscles] = useState([]);
-	const [goals, setGoals] = useState('strength_power');
+	const [goal, setGoal] = useState('strength_power');
 
 	function toggleModal() {
 		setShowModal(!showModal);
+	}
+
+	function updateMuscles(muscleGroup) {
+		if (muscles.includes(muscleGroup)) {
+			setMuscles(muscles.filter((val) => val !== muscleGroup));
+			return;
+		}
+
+		if (muscles.length > 2) {
+			return;
+		}
+
+		if (poison !== 'individual') {
+			setMuscles([muscleGroup]);
+			setShowModal(false);
+			return;
+		}
+
+		setMuscles([...muscles, muscleGroup]);
+
+
+		if (muscles.length === 2) {
+			setShowModal(false);
+
+		}
 	}
 
 	return (
@@ -41,6 +66,7 @@ export default function Generator() {
 					return (
 						<button
 							onClick={() => {
+								setMuscles([])
 								setPoison(type);
 							}}
 							className={
@@ -67,7 +93,7 @@ export default function Generator() {
 				<button
 					onClick={toggleModal}
 					className='relative p-3 flex items-center justify-center'>
-					<p>Select muscle groups</p>
+					<p className='capitalize'>{muscles.length == 0 ?'Select muscle groups': muscles.join(', ')}</p>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						width='24'
@@ -79,7 +105,32 @@ export default function Generator() {
 						<path d='M18 9c.852 0 1.297 .986 .783 1.623l-.076 .084l-6 6a1 1 0 0 1 -1.32 .083l-.094 -.083l-6 -6l-.083 -.094l-.054 -.077l-.054 -.096l-.017 -.036l-.027 -.067l-.032 -.108l-.01 -.053l-.01 -.06l-.004 -.057v-.118l.005 -.058l.009 -.06l.01 -.052l.032 -.108l.027 -.067l.07 -.132l.065 -.09l.073 -.081l.094 -.083l.077 -.054l.096 -.054l.036 -.017l.067 -.027l.108 -.032l.053 -.01l.06 -.01l.057 -.004l12.059 -.002z' />
 					</svg>
 				</button>
-				{showModal && <div>modal</div>}
+				{showModal && (
+					<div className='flex flex-col px-3 pb-3'>
+						{(poison === 'individual'
+							? WORKOUTS[poison]
+							: Object.keys(WORKOUTS[poison])
+						).map((muscleGroup, muscleGroupIndex) => {
+							return (
+								<button
+									onClick={() => {
+										updateMuscles(muscleGroup);
+									}}
+									key={muscleGroupIndex}
+									className={
+										'hover:text-blue-400 duration-200 ' +
+										(muscles.includes(muscleGroup)
+											? ' text-blue-400'
+											: ' ')
+									}>
+									<p className='uppercase'>
+										{muscleGroup.replaceAll('_', ' ')}
+									</p>
+								</button>
+							);
+						})}
+					</div>
+				)}
 			</div>
 
 			<Header
@@ -87,16 +138,16 @@ export default function Generator() {
 				title={'Become Juggernaut'}
 				description={'Select your ultimate objective.'}
 			/>
-			<div className='grid grid-cols-3 gap-4'>
+			<div className='grid grid-cols-1 sm:grid-cols-3 gap-4'>
 				{Object.keys(SCHEMES).map((scheme, schemeIndex) => {
 					return (
 						<button
 							onClick={() => {
-								setGoals(scheme);
+								setGoal(scheme);
 							}}
 							className={
 								'bg-slate-950 border  duration-200 hover:border-blue-600 py-3 rounded-lg px-4 ' +
-								(scheme === goals
+								(scheme === goal
 									? ' border-blue-600'
 									: ' border-blue-400')
 							}
