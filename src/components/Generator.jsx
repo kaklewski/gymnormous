@@ -1,6 +1,7 @@
 import React, { useState } from 'react';
 import SectionWrapper from './SectionWrapper';
 import { WORKOUTS, SCHEMES } from '../utils/swoldier';
+import Button from './Button';
 
 function Header(props) {
 	const { index, title, description } = props;
@@ -17,11 +18,17 @@ function Header(props) {
 	);
 }
 
-export default function Generator() {
+export default function Generator(props) {
+	const {
+		poison,
+		setPoison,
+		muscles,
+		setMuscles,
+		goal,
+		setGoal,
+		updateWorkout,
+	} = props;
 	const [showModal, setShowModal] = useState(false);
-	const [poison, setPoison] = useState('individual');
-	const [muscles, setMuscles] = useState([]);
-	const [goal, setGoal] = useState('strength_power');
 
 	function toggleModal() {
 		setShowModal(!showModal);
@@ -45,10 +52,8 @@ export default function Generator() {
 
 		setMuscles([...muscles, muscleGroup]);
 
-
 		if (muscles.length === 2) {
 			setShowModal(false);
-
 		}
 	}
 
@@ -66,7 +71,7 @@ export default function Generator() {
 					return (
 						<button
 							onClick={() => {
-								setMuscles([])
+								setMuscles([]);
 								setPoison(type);
 							}}
 							className={
@@ -93,7 +98,11 @@ export default function Generator() {
 				<button
 					onClick={toggleModal}
 					className='relative p-3 flex items-center justify-center'>
-					<p className='capitalize'>{muscles.length == 0 ?'Select muscle groups': muscles.join(', ')}</p>
+					<p className='capitalize'>
+						{muscles.length == 0
+							? 'Select muscle groups'
+							: muscles.join(', ')}
+					</p>
 					<svg
 						xmlns='http://www.w3.org/2000/svg'
 						width='24'
@@ -146,7 +155,7 @@ export default function Generator() {
 								setGoal(scheme);
 							}}
 							className={
-								'bg-slate-950 border  duration-200 hover:border-blue-600 py-3 rounded-lg px-4 ' +
+								'bg-slate-950 border duration-200 hover:border-blue-600 py-3 rounded-lg px-4' +
 								(scheme === goal
 									? ' border-blue-600'
 									: ' border-blue-400')
@@ -159,6 +168,7 @@ export default function Generator() {
 					);
 				})}
 			</div>
+			<Button func={updateWorkout} text={'Formulate'} />
 		</SectionWrapper>
 	);
 }
